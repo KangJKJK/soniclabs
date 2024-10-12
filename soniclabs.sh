@@ -49,29 +49,24 @@ case $choice in
     # 프라이빗키를 쉼표로 구분하여 배열로 변환
     IFS=',' read -r -a private_keys <<< "$account"
 
-    # accounts.js 파일에 프라이빗키 저장
-    cat <<EOL > /root/soniclabs-arcade-bot/accounts.js
-    /**
-    * Private key list file
-    * write your private key here like this
-    * export const privateKey = [
-    *   "PK1",
-    *   "PK2",
-    *   "PK3",
-    * ];
-    */
+# accounts.js 파일에 프라이빗키 저장
+cat <<EOL > /root/soniclabs-arcade-bot/accounts.js
+/**
+* Private key list file
+* write your private key here like this
+* export const privateKey = [
+*   "PK1",
+*   "PK2",
+*   "PK3",
+* ];
+*/
 
-    export const privateKey = [
-    EOL
-
-    for key in "${private_keys[@]}"; do
-        echo "  \"$key\"," >> /root/soniclabs-arcade-bot/accounts.js
-    done
-
-    # 마지막 쉼표 제거
-    sed -i '$ s/,$//' /root/soniclabs-arcade-bot/accounts.js
-
-    echo "];" >> /root/soniclabs-arcade-bot/accounts.js
+export const privateKey = [
+$(for key in "${private_keys[@]}"; do
+    echo "  \"$key\","
+done | sed '$ s/,$//')
+];
+EOL
 
     # 프록시 정보 입력 안내
     echo -e "${RED}Civil을 피하기 위해 각 프라이빗키마다 하나씩 프록시가 필요합니다.${NC}"
@@ -81,33 +76,24 @@ case $choice in
     echo -e "${YELLOW}챗GPT를 이용해서 형식을 변환해달라고 하면 됩니다.${NC}"
     read -p "프록시 정보를 입력하시고 엔터를 누르세요: " proxies
 
-    # proxy_list.js 파일에 프록시 정보 추가
-    cat <<EOL > /root/soniclabs-arcade-bot/config/proxy_list.js
-    /**
-    * 
-    * Example : 
-    * export const proxyList = [
-    *   "http://proxyUser:proxyPass@proxyHost:proxyPort",
-    *   "http://proxyUser:proxyPass@proxyHost:proxyPort",
-    *   "http://proxyUser:proxyPass@proxyHost:proxyPort",
-    * ];
-    */
+# proxy_list.js 파일에 프록시 정보 추가
+cat <<EOL > /root/soniclabs-arcade-bot/config/proxy_list.js
+/**
+* 
+* Example : 
+* export const proxyList = [
+*   "http://proxyUser:proxyPass@proxyHost:proxyPort",
+*   "http://proxyUser:proxyPass@proxyHost:proxyPort",
+*   "http://proxyUser:proxyPass@proxyHost:proxyPort",
+* ];
+*/
 
-    export const proxyList = [
-    EOL
-
-    # 프록시 정보를 쉼표로 구분하여 배열로 변환
-    IFS=',' read -r -a proxy_array <<< "$proxies"
-
-    # 각 프록시를 파일에 추가
-    for proxy in "${proxy_array[@]}"; do
-        echo "  \"$proxy\"," >> /root/soniclabs-arcade-bot/config/proxy_list.js
-    done
-
-    # 마지막 쉼표 제거
-    sed -i '$ s/,$//' /root/soniclabs-arcade-bot/config/proxy_list.js
-
-    echo "];" >> /root/soniclabs-arcade-bot/config/proxy_list.js
+export const proxyList = [
+$(IFS=','; for proxy in $proxies; do
+    echo "  \"$proxy\","
+done | sed '$ s/,$//')
+];
+EOL
 
     # 필수 진행단계 안내
     echo -e "${GREEN}봇을 실행하기전에 다음 단계들이 필수적으로 필요합니다. 진행하신 후 엔터를 눌러주세요.${NC}"
