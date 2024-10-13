@@ -45,7 +45,10 @@ case $choice in
     # 사용자 정보 입력
     echo -e "${GREEN}사용자 정보를 입력받습니다.${NC}"
     
-# 프라이빗키와 스마트 월렛 주소를 쉼표로 구분하여 배열로 변환
+# 사용자로부터 계정 정보 입력받기
+read -p "프라이빗키를 입력하세요 (쉼표로 구분): " account
+read -p "스마트 월렛 주소를 입력하세요 (쉼표로 구분): " wallet_addresses
+
 IFS=',' read -r -a private_keys <<< "$account"
 IFS=',' read -r -a smart_wallet_addresses <<< "$wallet_addresses"
 
