@@ -48,11 +48,14 @@ case $choice in
 # 사용자로부터 계정 정보 입력받기
 read -p "프라이빗키를 입력하세요 (쉼표로 구분): " account
 read -p "스마트 월렛 주소를 입력하세요 (쉼표로 구분): " wallet_addresses
-echo "프라이빗키 배열: ${private_keys[@]}"
-echo "스마트 월렛 주소 배열: ${smart_wallet_addresses[@]}"
 
+# IFS 설정 후 배열 초기화
 IFS=',' read -r -a private_keys <<< "$account"
 IFS=',' read -r -a smart_wallet_addresses <<< "$wallet_addresses"
+
+# 배열 내용 출력 (디버깅용)
+echo "프라이빗키 배열: ${private_keys[@]}"
+echo "스마트 월렛 주소 배열: ${smart_wallet_addresses[@]}"
 
 # accounts.js 파일에 프라이빗키와 스마트 월렛 주소 저장
 cat <<EOL > /root/soniclabs-arcade-bot/accounts.js
