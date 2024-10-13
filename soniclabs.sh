@@ -46,24 +46,33 @@ case $choice in
     echo -e "${GREEN}사용자 정보를 입력받습니다.${NC}"
     read -p "프라이빗키를 입력하세요. 여러개 입력시 쉼표로 구분하세요: " account
 
-    # 프라이빗키를 쉼표로 구분하여 배열로 변환
-    IFS=',' read -r -a private_keys <<< "$account"
+# 프라이빗키와 스마트 월렛 주소를 쉼표로 구분하여 배열로 변환
+IFS=',' read -r -a 프라이빗키를 적어주세요. <<< "$account"
+IFS=',' read -r -a 스마트월렛 주소를 적어주세요. <<< "$wallet_addresses"
 
-# accounts.js 파일에 프라이빗키 저장
+# accounts.js 파일에 프라이빗키와 스마트 월렛 주소 저장
 cat <<EOL > /root/soniclabs-arcade-bot/accounts.js
 /**
 * Private key list file
-* write your private key here like this
+* write your private key and smart wallet address here like this
 * export const privateKey = [
-*   "PK1",
-*   "PK2",
-*   "PK3",
+*   {
+*     pk: "PK1",
+*     smartWalletAddress: "SMARTWALLETADDRESSOFPK1",
+*   },
+*   {
+*     pk: "PK2",
+*     smartWalletAddress: "SMARTWALLETADDRESSOFPK2",
+*   },
 * ];
 */
 
 export const privateKey = [
-$(for key in "${private_keys[@]}"; do
-    echo "  \"$key\","
+$(for i in "${!private_keys[@]}"; do
+    echo "  {"
+    echo "    pk: \"${private_keys[i]}\","
+    echo "    smartWalletAddress: \"${smart_wallet_addresses[i]}\","
+    echo "  },"
 done | sed '$ s/,$//')
 ];
 EOL
