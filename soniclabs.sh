@@ -48,6 +48,8 @@ case $choice in
 # 사용자로부터 계정 정보 입력받기
 read -p "프라이빗키를 입력하세요 (쉼표로 구분): " account
 read -p "스마트 월렛 주소를 입력하세요 (쉼표로 구분): " wallet_addresses
+echo "프라이빗키 배열: ${private_keys[@]}"
+echo "스마트 월렛 주소 배열: ${smart_wallet_addresses[@]}"
 
 IFS=',' read -r -a private_keys <<< "$account"
 IFS=',' read -r -a smart_wallet_addresses <<< "$wallet_addresses"
