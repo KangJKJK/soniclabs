@@ -79,8 +79,12 @@ $(for i in "${!private_keys[@]}"; do
     echo "  {"
     echo "    pk: \"${private_keys[i]}\","
     echo "    smartWalletAddress: \"${smart_wallet_addresses[i]}\","
-    echo "  },"
-done | sed '$ s/,$//')
+    echo "  }"
+    # 마지막 요소가 아닌 경우에만 쉼표 추가
+    if [ "$i" -lt $((${#private_keys[@]} - 1)) ]; then
+        echo "  ,"
+    fi
+done)
 ];
 EOL
 
