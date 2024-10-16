@@ -58,7 +58,7 @@ echo "프라이빗키 배열: ${private_keys[@]}"
 echo "스마트 월렛 주소 배열: ${smart_wallet_addresses[@]}"
 
 # accounts.js 파일에 프라이빗키와 스마트 월렛 주소 저장
-cat <<EOL > /root/soniclabs-arcade-bot/accounts.js
+cat <<EOL > /root/soniclabs-arcade-bot/accounts/accounts.js
 /**
 * Private key list file
 * write your private key and smart wallet address here like this
