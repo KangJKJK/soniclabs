@@ -128,6 +128,8 @@ EOL
   2)
     echo -e "${GREEN}Soniclabs를 재실행합니다.${NC}"
     cd /root/soniclabs-arcade-bot
+    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # nvm을 로드합니다
     npm run start
     ;;
   3)
@@ -137,6 +139,8 @@ EOL
     git pull --rebase
     git stash && git pull
     npm update
+    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # nvm을 로드합니다
     npm run start
     ;;
   *)
