@@ -58,7 +58,7 @@ case $choice in
     {
         echo "PRIVATE_KEYS=${private_keys[*]}"
         echo "SMART_WALLET_ADDRESS=${smart_wallet_addresses[*]}"
-    } > /root/.env
+    } > /root/soniclabs-arcade-bot/.env
     
     # 프록시 정보 입력 안내
     echo -e "${RED}Civil을 피하기 위해 각 프라이빗키마다 하나씩 프록시가 필요합니다.${NC}"
@@ -69,7 +69,7 @@ case $choice in
     read -p "프록시 정보를 입력하시고 엔터를 누르세요: " proxies
     
     # .env 파일에 프록시 정보 추가
-    echo "PROXIES=$proxies" >> /root/.env
+    echo "PROXIES=$proxies" >> /root/soniclabs-arcade-bot/.env
     
     # 필수 진행단계 안내
     echo -e "${GREEN}봇을 실행하기전에 다음 단계들이 필수적으로 필요합니다. 진행하신 후 엔터를 눌러주세요.${NC}"
