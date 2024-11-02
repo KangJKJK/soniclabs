@@ -19,6 +19,7 @@ read -p "선택: " choice
 case $choice in
   1)
     echo -e "${GREEN}Soniclabs를 새로 설치합니다.${NC}"
+    
     # 파이썬 및 필요한 패키지 설치
     echo -e "${YELLOW}시스템 업데이트 및 필수 패키지 설치 중...${NC}"
     rm -rf /root/soniclabs-arcade-bot
@@ -62,10 +63,16 @@ case $choice in
     IFS=',' read -r -a private_keys <<< "$account"
     IFS=',' read -r -a smart_wallet_addresses <<< "$wallet_addresses"
     
-    # .env 파일에 프라이빗키와 스마트 월렛 주소 저장
+    # 월렛정보저장
     {
-        echo "pk:${private_keys[*]}"
-        echo "smartWalletAddress:${smart_wallet_addresses[*]}"
+        echo "export const privateKey = ["
+        for i in "${!private_keys[@]}"; do
+            echo "  {"
+            echo "    pk: \"${private_keys[$i]}\","
+            echo "    smartWalletAddress: \"${smart_wallet_addresses[$i]}\","
+            echo "  },"
+        done
+        echo "];"
     } > /root/soniclabsbot/accounts/accounts.js
     
     # 프록시 정보 입력 안내
