@@ -45,6 +45,14 @@ case $choice in
 
     # 사용자 정보 입력
     echo -e "${GREEN}사용자 정보를 입력받습니다.${NC}"
+
+    echo -e "${GREEN}봇을 실행하기전에 다음 단계들이 필수적으로 필요합니다. 진행하신 후 엔터를 눌러주세요.${NC}"
+    read -p "Faucet을 받아주세요: https://testnet.soniclabs.com/account"
+    read -p "플랫폼에 가입을 하세요: https://airdrop.soniclabs.com/?ref=0pyxta"
+    read -p "다음 사이트로 이동하세요: https://arcade.soniclabs.com/"
+    read -p "같은 지갑을 연결하시고 Step2에서 faucet을 또 받아주세요 (트위터계정필요)"
+    read -p "우측 상단에 표시되는 지갑주소가 스마트월렛이 됩니다."
+    read -p "Plinko, Mine, Wheel 게임을 최초 한번씩만 플레이를 해주세요"
     
     # 사용자로부터 계정 정보 입력받기
     read -p "프라이빗키를 입력하세요 (쉼표로 구분): " account
@@ -71,14 +79,7 @@ case $choice in
     # .env 파일에 프록시 정보 추가
     echo "PROXIES=$proxies" >> /root/soniclabs-arcade-bot/.env
     
-    # 필수 진행단계 안내
-    echo -e "${GREEN}봇을 실행하기전에 다음 단계들이 필수적으로 필요합니다. 진행하신 후 엔터를 눌러주세요.${NC}"
-    read -p "Faucet을 받아주세요: https://testnet.soniclabs.com/account"
-    read -p "플랫폼에 가입을 하세요: https://airdrop.soniclabs.com/?ref=0pyxta"
-    read -p "다음 사이트로 이동하세요: https://arcade.soniclabs.com/"
-    read -p "같은 지갑을 연결하시고 상단 중간에서 faucet을 또 받아주세요 (트위터계정필요)"
-    read -p "Plinko, Mine, Wheel 게임을 최초 한번씩만 플레이를 해주세요"
-    
+    # 필수 진행단계 안내   
     npm run start
     ;;
   2)
