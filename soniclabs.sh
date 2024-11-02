@@ -8,7 +8,7 @@ NC='\033[0m' # 색상 초기화
 
 echo -e "${GREEN}soniclabs 봇을 설치합니다.${NC}"
 echo -e "${GREEN}스크립트작성자: https://t.me/kjkresearch${NC}"
-echo -e "${GREEN}출처: https://github.com/web3bothub/soniclabs-arcade-bot${NC}"
+echo -e "${GREEN}출처: https://github.com/airdropinsiders/soniclabsbot${NC}"
 
 echo -e "${GREEN}옵션을 선택하세요:${NC}"
 echo -e "${YELLOW}1. Soniclabs 봇 새로 설치${NC}"
@@ -28,11 +28,11 @@ case $choice in
     # GitHub에서 코드 복사
     [ -d "/root/soniclabs-arcade-bot" ] && rm -rf /root/soniclabs-arcade-bot
     echo -e "${YELLOW}GitHub에서 코드 복사 중...${NC}"
-    git clone https://github.com/web3bothub/soniclabs-arcade-bot.git
+    git clone https://github.com/airdropinsiders/soniclabsbot.git
 
     # 작업 공간 생성 및 이동
     echo -e "${YELLOW}작업 공간 이동 중...${NC}"
-    cd /root/soniclabs-arcade-bot
+    cd /root/soniclabsbot
 
     echo -e "${YELLOW}Node.js LTS 버전을 설치하고 설정 중...${NC}"
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
@@ -64,9 +64,9 @@ case $choice in
     
     # .env 파일에 프라이빗키와 스마트 월렛 주소 저장
     {
-        echo "PRIVATE_KEYS=${private_keys[*]}"
-        echo "SMART_WALLET_ADDRESS=${smart_wallet_addresses[*]}"
-    } > /root/soniclabs-arcade-bot/.env
+        echo "pk:${private_keys[*]}"
+        echo "smartWalletAddress:${smart_wallet_addresses[*]}"
+    } > /root/soniclabsbot/accounts/accounts.js
     
     # 프록시 정보 입력 안내
     echo -e "${RED}Civil을 피하기 위해 각 프라이빗키마다 하나씩 프록시가 필요합니다.${NC}"
@@ -76,22 +76,31 @@ case $choice in
     echo -e "${YELLOW}챗GPT를 이용해서 형식을 변환해달라고 하면 됩니다.${NC}"
     read -p "프록시 정보를 입력하시고 엔터를 누르세요: " proxies
     
-    # .env 파일에 프록시 정보 추가
-    echo "PROXIES=$proxies" >> /root/soniclabs-arcade-bot/.env
+    # 프록시를 배열로 변환
+    IFS=',' read -r -a proxy_array <<< "$proxies"
+
+    # 결과를 proxy_list.js 파일에 저장
+    {
+        echo "export const proxyList = ["
+        for proxy in "${proxy_array[@]}"; do
+            echo "    \"$proxy\","
+        done
+        echo "];"
+    } > /root/Teneo-Bot/config/proxy_list.js
     
-    # 필수 진행단계 안내   
+    # 봇구동
     npm run start
     ;;
   2)
     echo -e "${GREEN}Soniclabs를 재실행합니다.${NC}"
-    cd /root/soniclabs-arcade-bot
+    cd /root/soniclabsbot
     export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # nvm을 로드합니다
     npm run start
     ;;
   3)
     echo -e "${GREEN}Soniclabs를 업데이트합니다.${NC}"
-    cd /root/soniclabs-arcade-bot
+    cd /root/soniclabsbot
     git pull
     git pull --rebase
     git stash && git pull
