@@ -56,6 +56,7 @@ case $choice in
     read -p "Plinko, Mine, Wheel 게임을 최초 한번씩만 플레이를 해주세요"
     
     # 사용자로부터 계정 정보 입력받기
+    echo -e "${GREEN}사용자 정보를 입력받습니다.${NC}"
     read -p "프라이빗키를 입력하세요 (쉼표로 구분): " account
     read -p "스마트 월렛 주소를 입력하세요 (쉼표로 구분): " wallet_addresses
     
