@@ -86,7 +86,7 @@ case $choice in
             echo "    \"$proxy\","
         done
         echo "];"
-    } > /root/Teneo-Bot/config/proxy_list.js
+    } > /root/soniclabsbot/config/proxy_list.js
     
     # 봇구동
     npm run start
