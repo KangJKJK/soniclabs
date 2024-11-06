@@ -8,7 +8,7 @@ NC='\033[0m' # 색상 초기화
 
 echo -e "${GREEN}soniclabs 봇을 설치합니다.${NC}"
 echo -e "${GREEN}스크립트작성자: https://t.me/kjkresearch${NC}"
-echo -e "${GREEN}출처: https://github.com/web3bothub/soniclabs-arcade-bot${NC}"
+echo -e "${GREEN}출처: https://github.com/Widiskel/soniclabs-arcade-bot${NC}"
 
 echo -e "${GREEN}옵션을 선택하세요:${NC}"
 echo -e "${YELLOW}1. Soniclabs 봇 새로 설치${NC}"
@@ -29,7 +29,7 @@ case $choice in
     # GitHub에서 코드 복사
     [ -d "/root/soniclabs-arcade-bot" ] && rm -rf /root/soniclabs-arcade-bot
     echo -e "${YELLOW}GitHub에서 코드 복사 중...${NC}"
-    git clone https://github.com/web3bothub/soniclabs-arcade-bot.git
+    git clone https://github.com/Widiskel/soniclabs-arcade-bot
 
     # 작업 공간 생성 및 이동
     echo -e "${YELLOW}작업 공간 이동 중...${NC}"
@@ -66,9 +66,24 @@ case $choice in
     
     # 월렛정보저장
     {
-        echo "PRIVATE_KEYS=${private_keys[*]}"
-        echo "SMART_WALLET_ADDRESS=${smart_wallet_addresses[*]}"
-    } > /root/soniclabs-arcade-bot/.env
+        echo "export const privateKey = ["
+        for i in "${!private_keys[@]}"; do
+            echo "  {"
+            echo "    pk: \"${private_keys[$i]}\","
+            echo "    smartWalletAddress: \"${smart_wallet_addresses[$i]}\","
+            echo "  },"
+        done
+        echo "];"
+    } > /root/soniclabsbot/accounts/accounts.js
+
+    # config파일 수정
+    {
+        echo "export class Config {"
+        echo "  static AUTOJOINREF = false;"
+        echo "  static DISPLAYPOINT = true;"
+        echo "  static DISPLAY = \"TWIST\";"
+        echo "}"
+    } > /root/soniclabsbot/config/config.js
     
     # 프록시 정보 입력 안내
     echo -e "${RED}Civil을 피하기 위해 각 프라이빗키마다 하나씩 프록시가 필요합니다.${NC}"
@@ -81,8 +96,14 @@ case $choice in
     # 프록시를 배열로 변환
     IFS=',' read -r -a proxy_array <<< "$proxies"
 
-    # .env 파일에 프록시 정보 추가
-    echo "PROXIES=$proxies" >> /root/soniclabs-arcade-bot/.env
+    # 결과를 proxy_list.js 파일에 저장
+        {
+            echo "export const proxyList = ["
+            for proxy in "${proxy_array[@]}"; do
+                echo "    \"$proxy\","
+            done
+            echo "];"
+        } > /root/soniclabsbot/config/proxy_list.js
     
     # 봇구동
     npm run start
