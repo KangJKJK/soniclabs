@@ -6,6 +6,9 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # 색상 초기화
 
+# 작업 디렉토리 설정
+WORK_DIR="/root/soniclabs-arcade-bot"
+
 echo -e "${GREEN}soniclabs 봇을 설치합니다.${NC}"
 echo -e "${GREEN}스크립트작성자: https://t.me/kjkresearch${NC}"
 echo -e "${GREEN}출처: https://github.com/Widiskel/soniclabs-arcade-bot${NC}"
@@ -22,18 +25,18 @@ case $choice in
     
     # 파이썬 및 필요한 패키지 설치
     echo -e "${YELLOW}시스템 업데이트 및 필수 패키지 설치 중...${NC}"
-    rm -rf /root/soniclabs-arcade-bot
+    rm -rf $WORK_DIR
     sudo apt update
     sudo apt install -y git
 
     # GitHub에서 코드 복사
-    [ -d "/root/soniclabs-arcade-bot" ] && rm -rf /root/soniclabs-arcade-bot
+    [ -d "$WORK_DIR" ] && rm -rf $WORK_DIR
     echo -e "${YELLOW}GitHub에서 코드 복사 중...${NC}"
-    git clone https://github.com/Widiskel/soniclabs-arcade-bot
+    git clone https://github.com/Widiskel/soniclabs-arcade-bot $WORK_DIR
 
     # 작업 공간 생성 및 이동
     echo -e "${YELLOW}작업 공간 이동 중...${NC}"
-    cd /root/soniclabs-arcade-bot
+    cd $WORK_DIR
 
     echo -e "${YELLOW}Node.js LTS 버전을 설치하고 설정 중...${NC}"
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
@@ -74,7 +77,7 @@ case $choice in
             echo "  },"
         done
         echo "];"
-    } > /root/soniclabsbot/accounts/accounts.js
+    } > $WORK_DIR/accounts/accounts.js
 
     # config파일 수정
     {
@@ -83,7 +86,7 @@ case $choice in
         echo "  static DISPLAYPOINT = true;"
         echo "  static DISPLAY = \"TWIST\";"
         echo "}"
-    } > /root/soniclabsbot/config/config.js
+    } > $WORK_DIR/config/config.js
     
     # 프록시 정보 입력 안내
     echo -e "${RED}Civil을 피하기 위해 각 프라이빗키마다 하나씩 프록시가 필요합니다.${NC}"
@@ -103,21 +106,21 @@ case $choice in
                 echo "    \"$proxy\","
             done
             echo "];"
-        } > /root/soniclabsbot/config/proxy_list.js
+        } > $WORK_DIR/config/proxy_list.js
     
     # 봇구동
     npm run start
     ;;
   2)
     echo -e "${GREEN}Soniclabs를 재실행합니다.${NC}"
-    cd /root/soniclabs-arcade-bot
+    cd $WORK_DIR
     export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # nvm을 로드합니다
     npm run start
     ;;
   3)
     echo -e "${GREEN}Soniclabs를 업데이트합니다.${NC}"
-    cd /root/soniclabs-arcade-bot
+    cd $WORK_DIR
     git pull
     git pull --rebase
     git stash && git pull
