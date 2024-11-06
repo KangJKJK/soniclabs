@@ -95,14 +95,20 @@ case $choice in
 
     # 프록시 정보를 입력받기 위한 변수 초기화
     proxies=""
+    empty_line_count=0  # 빈 줄 카운트 초기화
+
     while IFS= read -r line; do
-        # 줄바꿈이 두 번이면 입력 종료
+        # 줄이 비어있으면 빈 줄 카운트 증가
         if [[ -z "$line" ]]; then
-            if [[ -z "$proxies" ]]; then
+            ((empty_line_count++))  # 빈 줄 카운트 증가
+            # 빈 줄이 두 번이면 입력 종료
+            if [[ $empty_line_count -ge 2 ]]; then
                 break
             fi
+        else
+            empty_line_count=0  # 빈 줄이 아니면 카운트 초기화
+            proxies+="$line"$'\n'  # 입력된 줄을 proxies 변수에 추가
         fi
-        proxies+="$line"$'\n'  # 입력된 줄을 proxies 변수에 추가
     done
 
     # 프록시를 배열로 변환
