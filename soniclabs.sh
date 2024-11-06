@@ -94,19 +94,35 @@ case $choice in
     echo -e "${YELLOW}여러 개의 프록시는 쉼표로 구분하세요.${NC}"
     echo -e "${YELLOW}프록시가 없다면 VPS IP로만 이용하게됩니다. 입력형식: http://root:패스워드@VPS IP:VPS port${NC}"
     echo -e "${YELLOW}챗GPT를 이용해서 형식을 변환해달라고 하면 됩니다.${NC}"
-    read -p "프록시 정보를 입력하시고 엔터를 누르세요: " proxies
     
+    # 프록시 정보 입력 안내
+    echo -e "${RED}Civil을 피하기 위해 각 프라이빗키마다 하나씩 프록시가 필요합니다.${NC}"
+    echo -e "${YELLOW}프록시 정보를 입력하세요. 입력형식: http://proxyUser:proxyPass@IP:Port${NC}"
+    echo -e "${YELLOW}여러 개의 프록시는 줄바꿈으로 구분하세요. 엔터를 두번 입력하면 입력이 끝납니다.${NC}"
+
+    # 프록시 정보를 입력받기 위한 변수 초기화
+    proxies=""
+    while IFS= read -r line; do
+        # 줄바꿈이 두 번이면 입력 종료
+        if [[ -z "$line" ]]; then
+            if [[ -z "$proxies" ]]; then
+                break
+            fi
+        fi
+        proxies+="$line"$'\n'  # 입력된 줄을 proxies 변수에 추가
+    done
+
     # 프록시를 배열로 변환
-    IFS=',' read -r -a proxy_array <<< "$proxies"
+    IFS=$'\n' read -r -a proxy_array <<< "$proxies"
 
     # 결과를 proxy_list.js 파일에 저장
-        {
-            echo "export const proxyList = ["
-            for proxy in "${proxy_array[@]}"; do
-                echo "    \"$proxy\","
-            done
-            echo "];"
-        } > $WORK_DIR/config/proxy_list.js
+    {
+        echo "export const proxyList = ["
+        for proxy in "${proxy_array[@]}"; do
+            echo "    \"$proxy\","
+        done
+        echo "];"
+    } > $WORK_DIR/config/proxy_list.js
     
     # 봇구동
     npm run start
