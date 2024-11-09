@@ -11,7 +11,7 @@ WORK_DIR="/root/soniclabs-arcade-bot"
 
 echo -e "${GREEN}soniclabs 봇을 설치합니다.${NC}"
 echo -e "${GREEN}스크립트작성자: https://t.me/kjkresearch${NC}"
-echo -e "${GREEN}출처: https://github.com/Widiskel/soniclabs-arcade-bot${NC}"
+echo -e "${GREEN}출처: https://github.com/web3bothub/soniclabs-arcade-bot.git${NC}"
 
 echo -e "${GREEN}옵션을 선택하세요:${NC}"
 echo -e "${YELLOW}1. Soniclabs 봇 새로 설치${NC}"
@@ -32,7 +32,7 @@ case $choice in
     # GitHub에서 코드 복사
     [ -d "$WORK_DIR" ] && rm -rf $WORK_DIR
     echo -e "${YELLOW}GitHub에서 코드 복사 중...${NC}"
-    git clone https://github.com/Widiskel/soniclabs-arcade-bot $WORK_DIR
+    git clone https://github.com/web3bothub/soniclabs-arcade-bot.git $WORK_DIR
 
     # 작업 공간 생성 및 이동
     echo -e "${YELLOW}작업 공간 이동 중...${NC}"
@@ -62,33 +62,6 @@ case $choice in
     echo -e "${GREEN}사용자 정보를 입력받습니다.${NC}"
     read -p "프라이빗키를 입력하세요 (쉼표로 구분): " account
     read -p "스마트 월렛 주소를 입력하세요 (쉼표로 구분): " wallet_addresses
-    
-    # IFS 설정 후 배열 초기화
-    IFS=',' read -r -a private_keys <<< "$account"
-    IFS=',' read -r -a smart_wallet_addresses <<< "$wallet_addresses"
-    
-    # 월렛정보저장
-    {
-        echo "export const privateKey = ["
-        for i in "${!private_keys[@]}"; do
-            echo "  {"
-            echo "    pk: \"${private_keys[$i]}\","
-            echo "    smartWalletAddress: \"${smart_wallet_addresses[$i]}\","
-            echo "  },"
-        done
-        echo "];"
-    } > $WORK_DIR/accounts/accounts.js
-
-    # config파일 수정
-    {
-        echo "export class Config {"
-        echo "  static AUTOJOINREF = false;"
-        echo "  static DISPLAYPOINT = true;"
-        echo "  static DISPLAY = \"TWIST\";"
-        echo "}"
-    } > $WORK_DIR/config/config.js
-    
-     # 프록시파일 생성
     echo -e "${YELLOW}프록시 정보를 입력하세요. 입력형식: http://user:pass@ip:port${NC}"
     echo -e "${YELLOW}여러 개의 프록시는 줄바꿈으로 구분하세요.${NC}"
     echo -e "${YELLOW}입력을 마치려면 엔터를 두 번 누르세요.${NC}"
@@ -102,6 +75,24 @@ case $choice in
         done
         echo "];"  # 배열 끝
     } > "$WORK/config/proxiy_list.js"
+    
+    
+    # IFS 설정 후 배열 초기화
+    IFS=',' read -r -a private_keys <<< "$account"
+    IFS=',' read -r -a smart_wallet_addresses <<< "$wallet_addresses"
+    
+    # 월렛정보저장
+    {
+        echo "export const privateKey = ["
+        for i in "${!private_keys[@]}"; do
+            echo "  {"
+            echo "    PRIVATE_KEYS= \"${private_keys[$i]}\","
+            echo "    SMART_WALLET_ADDRESS= \"${smart_wallet_addresses[$i]}\","
+            echo "    PROXIES= \"${smart_wallet_addresses[$i]}\","
+            echo "  },"
+        done
+        echo "];"
+    } > $WORK_DIR/.env
     
     # 봇구동
     npm run start
