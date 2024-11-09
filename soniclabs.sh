@@ -66,17 +66,6 @@ case $choice in
     echo -e "${YELLOW}여러 개의 프록시는 줄바꿈으로 구분하세요.${NC}"
     echo -e "${YELLOW}입력을 마치려면 엔터를 두 번 누르세요.${NC}"
 
-    {
-        echo "export const proxyList = ["  # 파일 시작
-        while IFS= read -r line; do
-            [[ -z "$line" ]] && break
-            # 입력된 프록시 정보를 그대로 사용
-            echo "  \"$line\","
-        done
-        echo "];"  # 배열 끝
-    } > "$WORK/config/proxiy_list.js"
-    
-    
     # IFS 설정 후 배열 초기화
     IFS=',' read -r -a private_keys <<< "$account"
     IFS=',' read -r -a smart_wallet_addresses <<< "$wallet_addresses"
