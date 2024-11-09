@@ -83,20 +83,23 @@ case $choice in
     
     # 월렛정보저장
     {
-        echo "export const privateKey = ["
-        for i in "${!private_keys[@]}"; do
-            echo "  {"
-            echo "    PRIVATE_KEYS= \"${private_keys[$i]}\","
-            echo "    SMART_WALLET_ADDRESS= \"${smart_wallet_addresses[$i]}\","
-            echo "    PROXIES= \"${smart_wallet_addresses[$i]}\","
-            echo "  },"
-        done
-        echo "];"
+        echo -n "PRIVATE_KEYS="
+        printf "%s," "${private_keys[@]}" | sed 's/,$/\n/'
+        
+        echo -n "SMART_WALLET_ADDRESS="
+        printf "%s," "${smart_wallet_addresses[@]}" | sed 's/,$/\n/'
+        
+        echo -n "PROXIES="
+        while IFS= read -r line; do
+            [[ -z "$line" ]] && break
+            echo -n "$line,"
+        done | sed 's/,$//'
     } > $WORK_DIR/.env
     
     # 봇구동
     npm run start
     ;;
+    
   2)
     echo -e "${GREEN}Soniclabs를 재실행합니다.${NC}"
     cd $WORK_DIR
